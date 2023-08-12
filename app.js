@@ -24,8 +24,11 @@ app.use(express.urlencoded({extended: false}));
 
 app.use(express.json());
 
-app.use(cookieParser());
 
+//home page
+app.get("/", (req, res) => {
+  res.render("chatgpt");
+});
 
 app.listen(PORT, function() {
     console.log('Server listening on ' + PORT);
