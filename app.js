@@ -1,3 +1,7 @@
+  require('dotenv').config();
+
+  let prompt = "a list of ten richest countries in the world"
+
   const { Configuration, OpenAIApi } = require("openai");
 
   const configuration = new Configuration({
@@ -6,24 +10,22 @@
 
   const openai = new OpenAIApi(configuration);
 
+
   const chatGPT = async (prompt) => {
     try {
          const response = await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
             messages: [{role:"user", content:prompt}]
          })
-        console.log(response["data"]["choices"][0]["message"]["content"])
-
+        let answer = response["data"]["choices"][0]["message"]["content"]
+        console.log(answer)
        } 
     catch(error) {
         console.log({error})
        }
-  }
+    }
+    chatGPT(prompt)
 
-  let prompt = "a list of ten random cities in the United State";
-  chatGPT(prompt)
-  
-  
 /*
 const express = require('express');
 const app = express();
@@ -60,35 +62,44 @@ app.use(express.json());
 
 const bodyParser = require('body-parser');
 
-
 app.use(cors());
-
-
 
 //home page
 app.get("/", (req, res) => {
   res.render("chatgpt");
 });
 
-app.post("/temp", async (req, res) => {
+app.post("/chatGPT", async (req, res) => {
+
+  let prompt = req.body.prompt;
 
   const { Configuration, OpenAIApi } = require("openai");
+
   const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: process.env.OPENAI_API_KEY
   });
+
   const openai = new OpenAIApi(configuration);
 
-  async function start(argument) {
-    const response = await openai.createCompletion({
-      model: "text-devinci-003",
-      prompt: "list ten random cities in the United States",
-      tempreture: 0,
-      max_token: 1000
-    })
-    console.log(response.data.choices[0.text])
-  }
-  
+  const chatGPT = async (prompt) => {
+    try {
+         const response = await openai.createChatCompletion({
+            model: "gpt-3.5-turbo",
+            messages: [{role:"user", content:prompt}]
+         })
+        let answer = response["data"]["choices"][0]["message"]["content"]
+        res.send(answer)
+       } 
+    catch(error) {
+        console.log({error})
+        res.send({error})
+       }
+    }
 
+   chatGPT(prompt)
+
+  })
+  
 app.listen(PORT, () => {
     console.log('Server listening on ' + PORT);
 });
