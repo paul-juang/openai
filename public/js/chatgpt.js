@@ -8,9 +8,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	button.addEventListener("click", async function(e) {
 		e.preventDefault()
-		const promptValue = prompt.value.trim()
+		
+		const promptValue = prompt.value.trim();
+		prompt.value = "";
 
-		let res = await fetch("/temp", {
+		let interval1 = setInterval(() => {
+			prompt.value += ".";
+			if (prompt.value === "....") prompt.value = ""
+		}, 200)
+		
+		let res = await fetch("/chatGPT", {
 			      method: 'POST', 
                   headers: {
                      'Content-Type': 'application/json'
@@ -18,35 +25,28 @@ document.addEventListener('DOMContentLoaded', () => {
                   body: JSON.stringify({ prompt: promptValue })
                   })
 
-        let txt = await res.json();
-        console.log(txt)
+        let answer = await res.json();
+        let answerText = answer["answer"];
+
+        clearInterval(interval1);
+
+        prompt.value = "";
+
+        let finalText = promptValue +"\r\n"+answerText
+
+        index = 0;
+
+        let interval2 = setInterval(() => {
+        	   if (index < finalText.length) {
+        	   	prompt.value += finalText.charAt(index);
+        	   	index++
+        	   } else {
+        	   	clearInterval(interval2)
+        	   }  
+        }, 20)
+
 		})
 
-
- 
-	let loadInterval;
-
-	function loader(element) {
-		element.textContent = "";
-		loadInterval = setInterval(() => {
-			element.textContent += "."
-			if (element.textContent === "...") element.textContent = "";
-
-		}, 300)
-	}
-
-	function typeText(element, text) {
-		let index = 0;
-
-		let interval = setInterval(() => {
-			if (index < text.length) {
-			   element.innerHtml += text.charAt(index);
-			   index++;
-			} else {
-			   clearInterval(interval);
-			}
-		}, 200)
-	}
 
 	function generateUniqueId() {
 		const timestamp = Date.now();
