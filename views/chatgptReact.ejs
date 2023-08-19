@@ -1,0 +1,120 @@
+<html lang="en"> 
+<head>
+  <meta charset="utf-8">
+  <title>chatGPT- OpenAI</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style> 
+    h2 {
+      text-align: center;
+    }
+
+    h3 {
+      text-align: center;
+    }
+
+    #prompt {
+      position: relative;
+      top: 20px;
+      width: 94%;
+      padding: 12px 20px;
+      box-sizing: border-box;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      background-color: #f8f8f8;
+      font-size: 16px;
+      resize: vertical;
+      overflow: auto;
+    }
+
+    button {
+      position: relative;
+      top: 2px;
+      width: 60px;
+      padding: 12px 20px;
+      box-sizing: border-box;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      background-color: #f8f8f8;
+      color: blue;
+      font-size: 16px;
+    }
+  </style>
+
+  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+
+<body>
+  <div id="app"></div>
+  <script type="text/babel">
+    class App extends React.Component {
+
+      render() {
+        return (
+         <div>
+          <h2>
+             ChatGPT-3.5 Artificial Intelligence
+          </h2>
+          
+            <textarea id="prompt" rows="4" cols="1" resizeable="true">
+            </textarea>
+            <button id="btn" onClick = {this.submitForm}>
+              <i className="fas fa-paper-plane"></i></button>
+          
+          </div>
+        );
+      }
+
+      submitForm = async (e) => {
+        e.preventDefault()
+        
+        const prompt = document.querySelector("#prompt")
+        const promptValue = prompt.value.trim();
+        prompt.value = "";
+
+        let interval1 = setInterval(() => {
+          prompt.value += ".";
+          if (prompt.value === "....") prompt.value = ""
+        }, 200)
+    
+        let res = await fetch("/chatGPT", {
+            method: 'POST', 
+                  headers: {
+                     'Content-Type': 'application/json'
+                    },
+                  body: JSON.stringify({ prompt: promptValue })
+                  })
+
+        let answer = await res.json();
+        let answerText = answer["answer"];
+
+        clearInterval(interval1);
+
+        prompt.value = "";
+
+        let finalText = promptValue +"\r\n"+answerText
+
+        let index = 0;
+
+        let interval2 = setInterval(() => {
+             if (index < finalText.length) {
+              prompt.value += finalText.charAt(index);
+              index++
+             } else {
+              clearInterval(interval2)
+             }  
+        }, 20)
+
+      }
+    }
+
+    ReactDOM.render(<App/>, document.querySelector("#app"))
+  </script>  
+
+</body>
+</html>
