@@ -12,10 +12,6 @@
       text-align: center;
     }
 
-    h3 {
-      text-align: center;
-    }
-
     #prompt {
       position: relative;
       top: 20px;
@@ -60,19 +56,15 @@
           <h2>
              ChatGPT-3.5 Artificial Intelligence
           </h2>
-          
-            <textarea id="prompt" rows="4" cols="1" resizeable="true">
+          <textarea id="prompt" rows="4" cols="1" resizeable="true">
             </textarea>
-            <button id="btn" onClick = {this.submitForm}>
+          <button id="btn" onClick = {this.submitInput}>
               <i className="fas fa-paper-plane"></i></button>
-          
           </div>
         );
       }
 
-      submitForm = async (e) => {
-        e.preventDefault()
-        
+      submitInput = async () => {
         const prompt = document.querySelector("#prompt")
         const promptValue = prompt.value.trim();
         prompt.value = "";
