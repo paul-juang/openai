@@ -50,28 +50,53 @@
   <script type="text/babel">
     class App extends React.Component {
 
+      constructor(props) {
+        super(props)
+        this.state = {
+          inputvalue: ""
+        }
+      }
+
       render() {
         return (
          <div>
           <h2>
              ChatGPT-3.5 Artificial Intelligence
           </h2>
-          <textarea id="prompt" rows="4" cols="1" resizeable="true">
-            </textarea>
+          <textarea 
+            value={this.state.inputvalue} onChange={this.handleChange}
+            id="prompt" rows="4" cols="1" resizeable="true">
+          </textarea>
           <button id="btn" onClick = {this.submitInput}>
               <i className="fas fa-paper-plane"></i></button>
           </div>
         );
       }
+       
+      handleChange = (e) => {
+        this.setState({
+          inputvalue: e.target.value
+        })
+      }
 
       submitInput = async () => {
         const prompt = document.querySelector("#prompt")
-        const promptValue = prompt.value.trim();
-        prompt.value = "";
+        const promptValue = this.state.inputvalue 
+
+        this.setState({
+          inputvalue: ""
+        })
 
         let interval1 = setInterval(() => {
-          prompt.value += ".";
-          if (prompt.value === "....") prompt.value = ""
+          this.setState(state => ({
+             inputvalue: state.inputvalue + "."
+           }))
+
+          if (this.state.inputvalue === "....") {
+            this.setState({
+              inputvalue: ""
+            })
+          }
         }, 200)
     
         let res = await fetch("/chatGPT", {
@@ -87,15 +112,18 @@
 
         clearInterval(interval1);
 
-        prompt.value = "";
-
+        this.setState({
+          inputvalue: ""
+        })
         let finalText = promptValue +"\r\n"+answerText
 
         let index = 0;
 
         let interval2 = setInterval(() => {
              if (index < finalText.length) {
-              prompt.value += finalText.charAt(index);
+              this.setState(state => ({
+                inputvalue: state.inputvalue+finalText.charAt(index)
+              }))
               index++
              } else {
               clearInterval(interval2)
