@@ -53,6 +53,7 @@
       constructor(props) {
         super(props)
         this.state = {
+          btndisabled: true,
           inputvalue: ""
         }
       }
@@ -60,19 +61,34 @@
       render() {
         return (
          <div>
+
           <h2>
              ChatGPT-3.5 Artificial Intelligence
           </h2>
+
           <textarea 
-            value={this.state.inputvalue} onChange={this.handleChange}
+            value={this.state.inputvalue} 
+            onChange={this.handleChange}
+            onKeyPress = {this.handleKeyPress}
             id="prompt" rows="4" cols="1" resizeable="true">
           </textarea>
-          <button id="btn" onClick = {this.submitInput}>
-              <i className="fas fa-paper-plane"></i></button>
+
+          <button 
+            onClick = {this.submitInput}  id="btn" 
+            disabled = {this.state.btndisabled ? true : false}>
+            <i className="fas fa-paper-plane"></i>
+           </button>
+
           </div>
         );
       }
        
+      handleKeyPress = (e) => {
+        this.setState({
+              btndisabled: false
+           })
+      }
+
       handleChange = (e) => {
         this.setState({
           inputvalue: e.target.value
@@ -80,10 +96,11 @@
       }
 
       submitInput = async () => {
-        const prompt = document.querySelector("#prompt")
-        const promptValue = this.state.inputvalue 
+        const prompt = document.querySelector("#prompt");
+        const promptValue = this.state.inputvalue+"\r\n"+"\r\n";  
 
         this.setState({
+          btneabled: false,
           inputvalue: ""
         })
 
@@ -115,7 +132,7 @@
         this.setState({
           inputvalue: ""
         })
-        let finalText = promptValue +"\r\n"+answerText
+        let finalText = promptValue + answerText;
 
         let index = 0;
 
@@ -129,7 +146,6 @@
               clearInterval(interval2)
              }  
         }, 20)
-
       }
     }
 
