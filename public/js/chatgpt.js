@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (prompt.value === "....") prompt.value = ""
     }, 300)
     
-    let res = await fetch(`/api?prompt=${promptValue}`, {
+    let res = await fetch("/chatGPT", {
             method: 'POST', 
                   headers: {
                      'Content-Type': 'application/json',
