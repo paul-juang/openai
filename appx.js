@@ -1,9 +1,10 @@
-const express = require('express');
+import express from 'express'
 const app = express();
 
-const cors = require('cors');
+import cors from 'cors'
+
 /*
-const { Configuration, OpenAIApi } = require("openai");
+import { Configuration, OpenAIApi } from 'openai'
 
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
@@ -11,10 +12,32 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 */
+
+//import {dotenv} from 'dotenv'
+//dotenv.config()
+
+import path from 'path'
+
+
+
+/*
+const express = require('express');
+const app = express();
+
+const cors = require('cors');
+
+const { Configuration, OpenAIApi } = require("openai");
+
+const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+});
+
+const openai = new OpenAIApi(configuration);
+
 require('dotenv').config();
 
 const path = require('path');
-
+*/
 const PORT = process.env.PORT || 3000;
 
 //app.set
@@ -44,7 +67,9 @@ app.post("/chatGPT", async (req, res) => {
 
   let prompt = req.body.prompt;
 
-  const { Configuration, OpenAIApi } = require("openai");
+  //import { Configuration, OpenAIApi } from 'openai'
+
+  //const { Configuration, OpenAIApi } = require("openai");
 
   const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY
